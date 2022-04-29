@@ -1,8 +1,9 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import config from './config.mjs';
+import authController from '/controllers/authController.mjs';
+import mongoose from "mongoose";
 import cookieParser from 'cookie-parser';
-import UserAuth from './controllers/authController.mjs '
 
 const app = express();
 
@@ -25,7 +26,26 @@ app.use((req, res, next) => {
 });
 
 //controllers
-app.use('/user', UserAuth);
-app.listen(config.port, () => {
-    console.log(`App listening on port ${config.port}`);
+app.use('/auth', authController);
+
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+
+    res.render('error', {
+        message: err.message,
+        error: err
+    });
 });
+
+mongoose.connect(
+    'mongodb+srv://akhan:yaeTjxjoRcC50EX5@cluster0.eyg7o.mongodb.net/onepoint?retryWrites=true&w=majority',
+    {
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true
+    },
+    () => {
+        app.listen(config.port, () => {
+            console.log(`App listening on port ${config.port}`);
+        });
+    });
