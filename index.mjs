@@ -35,9 +35,9 @@ app.use((req, res, next) => {
 });
 
 //controllers
-app.use('/auth', authController);
-app.use('/events', eventController);
-app.use('/enrollments', enrollmentController);
+app.use(authController);
+app.use(eventController);
+app.use(enrollmentController);
 
 app.use(function (err, req, res, next) {
     res.status(err.status || 500).json({
