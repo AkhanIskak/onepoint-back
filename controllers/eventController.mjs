@@ -54,15 +54,17 @@ router.put('/event/:id', async (req, res) => {
 });
 
 router.post('/event/', upload.single('logo'), async (req, res) => {
-    const body = req.body;
+    const eventObject = req.body;
 
-    const event = new EventModel(body);
+    eventObject.createdBy = req.header('Auth');
     if (req.file) {
-        event.logo = {
+        eventObject.logo = {
             data: await fs.promises.readFile(path.join(__dirname + '/event/uploads/' + req.file.filename)),
             contentType: 'image/png'
         }
     }
+
+    const event = new EventModel(eventObject);
 
     const savedEvent = await event.save();
 
