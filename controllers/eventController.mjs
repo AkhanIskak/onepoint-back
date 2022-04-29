@@ -22,7 +22,7 @@ const upload = multer({storage: storage})
 router.use(async (req, res, next) => {
     const authToken = req.header('Auth');
 
-    if (authToken && await UserModel.exists({email: authToken})) {
+    if (!authToken || !(await UserModel.exists({email: authToken}))) {
         res.status(401).send();
         return;
     }
