@@ -1,5 +1,5 @@
 import express from "express";
-import User from '/models/user.mjs'
+import User from '../models/user.mjs'
 const router = express.Router();
 
 router.post("/register", async (req, res) => {

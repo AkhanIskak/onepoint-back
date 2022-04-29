@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import config from './config.mjs';
-import authController from '/controllers/authController.mjs';
+import authController  from "./controllers/authController.mjs";
 import mongoose from "mongoose";
 import cookieParser from 'cookie-parser';
 
