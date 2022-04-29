@@ -18,8 +18,8 @@ const eventSchema = new Schema({
         body: {type: String, required: true},
         date: {type: Date, default: Date.now}
     }],
-    date: {type: Date, required: true},
-    createTs: {type: Date, default: Date.now},
+    dateStart: {type: Date, required: true},
+    dateEnd: {type: Date, required: true},
     createdBy: {type: String, required: true},
     priority: {type: Number, default: 0},
     viewCount: {type: Number, default: 0},
