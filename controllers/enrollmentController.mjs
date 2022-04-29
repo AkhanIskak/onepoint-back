@@ -27,7 +27,7 @@ router.get('/enrollment', async (req, res) => {
 
 router.post('/enrollment/:id/complete', async (req, res) => {
     //check if current user is actually creator of event;
-    const enrollment = await EventModel.findById(req.params.id);
+    const enrollment = await EnrollmentModel.findById(req.params.id);
     const event = await EventModel.findById(enrollment.eventId);
 
     if (event.createdBy !== req.cookies.auth) {
