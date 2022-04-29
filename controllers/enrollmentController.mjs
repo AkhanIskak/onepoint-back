@@ -18,7 +18,7 @@ router.use(async (req, res, next) => {
 });
 
 router.get('/enrollment', async (req, res) => {
-    const {_id} = await UserModel.findOne({email: req.cookies.email});
+    const {_id} = await UserModel.findOne({email: req.cookies.auth});
 
     const enrollments = await EnrollmentModel.find({participantId: _id})
 
