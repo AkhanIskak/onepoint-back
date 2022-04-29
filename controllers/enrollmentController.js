@@ -1,6 +1,7 @@
 import express from 'express';
 import EnrollmentModel from "../models/enrollment";
 import User from "../models/user.mjs";
+import EventModel from "../models/event.mjs";
 
 const router = express.Router();
 router.use(async (req, res, next) => {
@@ -25,3 +26,18 @@ router.post("/:id", async (req, res) => {
         message:"Enrollment created"
     })
 });
+router.patch("/:id",async (req, res) => {
+    //check if current user is actually creator of event;
+    const {_id} = await User.findOne({email: req.cookies.auth});
+    const event = await EventModel.findById(req.params.id);
+    if(event._id!==_id){
+        res.status(401).json({
+            message:"This user is not creator of event, and cant enroll participants"
+        })
+        return;
+    }
+    await EnrollmentModel.updateOne({eventId:event.id,participantId:_id},{isCompleted:true,comment:req.body.comment})
+    res.status(200).json({
+        message:"Enrollment is DONE!! :)"
+    })
+})
