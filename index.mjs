@@ -39,11 +39,6 @@ app.use(function (err, req, res, next) {
 
 mongoose.connect(
     'mongodb+srv://akhan:yaeTjxjoRcC50EX5@cluster0.eyg7o.mongodb.net/onepoint?retryWrites=true&w=majority',
-    {
-        useNewUrlParser: true,
-        useFindAndModify: false,
-        useUnifiedTopology: true
-    },
     () => {
         app.listen(config.port, () => {
             console.log(`App listening on port ${config.port}`);
