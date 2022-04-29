@@ -18,8 +18,9 @@ router.post('/auth/register', async (req, res) => {
 });
 
 router.post('/auth/login', async (req, res) => {
-    if (UserModel.exists(req.body)) {
-        res.status(200).send(req.body.email);
+    const user = await UserModel.findOne(req.body)
+    if (user) {
+        res.status(200).send(user);
     } else {
         res.sendStatus(401);
     }
