@@ -1,23 +1,28 @@
 import express from "express";
-
+import Conspect from "../models/conspect.mjs";
 
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
+    try {
+        await Conspect.create(req.body);
+        res.status(200).json({
+            message: "User successfuly created"
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: err
+        })
+    }
 });
-router.post("/resendEmailConfirmCode", async (req, res) => {
-});
-router.post("/confirmEmail", (req, res) => {
-});
-router.post("/login", (req, res) => {
 
+router.post("/login", async (req, res) => {
+    const user = await Conspect.findOne(req.body);
+    if (user) {
+        //jwt token
+        res.cookie("auth", req.body.name).status(200).json({message: "successfuy logged in"})
+
+    } else res.status(401).json({message: "Wrong email or password"})
 });
 
-router.post("/forgotPassword", (req, res) => {
-});
-
-router.get("/resetPassword/:email/:code", (req, res) => {
-});
-router.get("/", (req, res) => {
-});
 export default router;
