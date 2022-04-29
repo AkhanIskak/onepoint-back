@@ -2,7 +2,7 @@
   "name": "onepoint-back",
   "version": "1.0.0",
   "description": "backend for one point app.",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/AkhanIskak/onepoint-back#readme",
   "dependencies": {
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.0.0",
     "express": "^4.18.0",
     "mongodb": "^4.5.0"
   }
