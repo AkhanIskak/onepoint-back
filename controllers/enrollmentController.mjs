@@ -7,9 +7,9 @@ import pdf from 'html-pdf';
 const router = express.Router();
 
 router.use(async (req, res, next) => {
-    const user = await UserModel.find({email: req.header('Auth')})
+    const authToken = req.header('Auth');
 
-    if (!user) {
+    if (authToken && await UserModel.exists({email: authToken})) {
         res.status(401).send();
         return;
     }

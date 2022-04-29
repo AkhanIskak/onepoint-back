@@ -20,9 +20,9 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 router.use(async (req, res, next) => {
-    const user = await EventModel.find({email: req.header('Auth')})
+    const authToken = req.header('Auth');
 
-    if (!user) {
+    if (authToken && await UserModel.exists({email: authToken})) {
         res.status(401).send();
         return;
     }
