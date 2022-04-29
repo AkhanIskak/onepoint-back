@@ -69,12 +69,12 @@ router.post('/event/', upload.single('logo'), async (req, res) => {
     res.status(200).send(savedEvent._id);
 });
 
-router.post('/event/enroll/:eventId', async (req, res) => {
+router.post('/event/enroll/:id', async (req, res) => {
     const {_id} = await UserModel.findOne({email: req.cookies.auth});
 
     const enrollment = await EnrollmentModel.create({
         participantId: _id,
-        eventId: req.params.eventId,
+        eventId: req.params.id,
     });
 
     res.status(200).send(enrollment._id);
