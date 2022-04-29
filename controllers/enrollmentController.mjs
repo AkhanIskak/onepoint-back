@@ -40,15 +40,20 @@ router.post('/enrollment/:id/complete', async (req, res) => {
 
     enrollment.isCompleted = true;
     enrollment.comment = req.body.comment;
+
     const user = await UserModel.findById(enrollment.participantId)
+
+    //TODO: reputation history
     user.reputation = user.reputation + 30;
     user.save()
+
     enrollment.update();
 
     res.status(200).send(enrollment._id);
 });
 
 router.post('/enrollment/:id/certificate', async (req, res) => {
+    //TODO: html template
     const html = 'Participant: <b>${participant.email}</b>';
 
     const enrollmentId = req.params.id;
