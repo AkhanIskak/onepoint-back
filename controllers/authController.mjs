@@ -6,8 +6,8 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
     try {
         await UserModel.create(req.body);
-        res.status(200).json({ 
-            message: "User successfuly created"
+        res.status(200).send({
+            message: "User successfully created"
         })
     } catch (err) {
         console.log(err);
@@ -21,9 +21,11 @@ router.post("/login", async (req, res) => {
     const user = await UserModel.findOne(req.body);
     if (user) {
         //jwt token
-        res.cookie("auth", req.body.email).status(200).json({message: "successfuy logged in"})
+        res.cookie("auth", req.body.email).sendStatus(200);
 
-    } else res.status(401).json({message: "Wrong email or password"})
+    } else {
+        res.sendStatus(401);
+    }
 });
 
 export default router;
