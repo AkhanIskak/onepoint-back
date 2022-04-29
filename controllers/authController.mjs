@@ -23,8 +23,7 @@ router.post('/auth/login', async (req, res) => {
         //jwt token
         res.writeHead(200, {
             'Set-Cookie': `auth=${req.body.email}`,
-            'Content-Type': 'text/plain'
-        });
+        }).end();
 
     } else {
         res.sendStatus(401);
