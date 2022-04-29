@@ -2,15 +2,16 @@ import mongoose from 'mongoose';
 
 const {Schema} = mongoose;
 
-const conspectSchema = new Schema({
+const eventSchema = new Schema({
     name: String,
     attachments: [{base64: String, date: {type: Date, default: Date.now}}],
     createTs: {type: Date, default: Date.now},
     comments: [{body: String, date: Date}],
     createdBy: String,
-    rating: Number
+    rating: Number,
+    location:String
 });
 
-const ConspectModel = mongoose.model('Conspect', conspectSchema);
+const EventModel = mongoose.model('Conspect', eventSchema);
 
-export default ConspectModel;
+export default EventModel;

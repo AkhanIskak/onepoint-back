@@ -1,5 +1,5 @@
 import express from 'express';
-import ConspectModel from "../models/conspect.mjs";
+import EventModel from "../models/event.mjs";
 
 const router = express.Router();
 
@@ -8,9 +8,9 @@ router.get('/', async (req, res) => {
 
     let conspects;
     if (userEmail) {
-        conspects = await ConspectModel.find({'createdBy': userEmail});
+        conspects = await EventModel.find({'createdBy': userEmail});
     } else {
-        conspects = await ConspectModel.find({});
+        conspects = await EventModel.find({});
     }
 
     res.status(200).send(conspects);
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const id = req.params.id;
 
-    const conspect = await ConspectModel.findById(id);
+    const conspect = await EventModel.findById(id);
 
     res.status(200).send(conspect);
 });
@@ -28,8 +28,8 @@ router.put('/:id', async (req, res) => {
     const id = req.params.id;
     const conspect = req.body;
 
-    await ConspectModel.findByIdAndUpdate(id, conspect);
-    await ConspectModel.save();
+    await EventModel.findByIdAndUpdate(id, conspect);
+    await EventModel.save();
 
     res.status(200).send(conspect._id.toString());
 });
@@ -37,7 +37,7 @@ router.put('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     const body = req.body;
 
-    const conspect = new ConspectModel(body);
+    const conspect = new EventModel(body);
 
     const savedConspect = await conspect.save();
 
