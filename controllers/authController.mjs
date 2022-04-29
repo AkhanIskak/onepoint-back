@@ -1,13 +1,13 @@
-import express from "express";
+import express from 'express';
 import UserModel from '../models/user.mjs';
 
 const router = express.Router();
 
-router.post("/register", async (req, res) => {
+router.post('auth/register', async (req, res) => {
     try {
         await UserModel.create(req.body);
         res.status(200).send({
-            message: "User successfully created"
+            message: 'User successfully created'
         })
     } catch (err) {
         console.log(err);
@@ -17,11 +17,11 @@ router.post("/register", async (req, res) => {
     }
 });
 
-router.post("/login", async (req, res) => {
+router.post('auth/login', async (req, res) => {
     const user = await UserModel.findOne(req.body);
     if (user) {
         //jwt token
-        res.cookie("auth", req.body.email).sendStatus(200);
+        res.cookie('auth', req.body.email).sendStatus(200);
 
     } else {
         res.sendStatus(401);

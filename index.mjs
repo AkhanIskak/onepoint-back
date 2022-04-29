@@ -6,12 +6,19 @@ import mongoose from "mongoose";
 import cookieParser from 'cookie-parser';
 import eventController from "./controllers/eventController.mjs";
 import enrollmentController from "./controllers/enrollmentController.mjs";
+import swaggerUi from 'swagger-ui-express';
+import { readFile } from 'fs/promises';
+
+const swaggerDocument = JSON.parse((await readFile('./swagger.json')).toString());
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
+
+app.use('/api-docs', swaggerUi.serve);
+app.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
 app.get('/', (req, res) => {
     res.json({'message': 'ok'});
@@ -29,8 +36,9 @@ app.use((req, res, next) => {
 
 //controllers
 app.use('/auth', authController);
-app.use('/events', eventController)
-app.use('/enrollments', enrollmentController)
+app.use('/events', eventController);
+app.use('/enrollments', enrollmentController);
+
 app.use(function (err, req, res, next) {
     res.status(err.status || 500).json({
         message: err.message,

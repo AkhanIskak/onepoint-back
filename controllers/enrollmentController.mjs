@@ -1,7 +1,7 @@
 import express from 'express';
-import EnrollmentModel from "../models/enrollment";
-import UserModel from "../models/user.mjs";
-import EventModel from "../models/event.mjs";
+import EnrollmentModel from '../models/enrollment.mjs';
+import UserModel from '../models/user.mjs';
+import EventModel from '../models/event.mjs';
 import pdf from 'html-pdf';
 
 const router = express.Router();
@@ -17,7 +17,7 @@ router.use(async (req, res, next) => {
     next();
 });
 
-router.get("/", async (req, res) => {
+router.get('/enrollment', async (req, res) => {
     const {_id} = await UserModel.findOne({email: req.cookies.email});
 
     const enrollments = await EnrollmentModel.find({participantId: _id})
@@ -25,14 +25,14 @@ router.get("/", async (req, res) => {
     res.status(200).send(enrollments);
 });
 
-router.post("/:id/complete", async (req, res) => {
+router.post('/enrollment/:id/complete', async (req, res) => {
     //check if current user is actually creator of event;
     const enrollment = await EventModel.findById(req.params.id);
     const event = await EventModel.findById(enrollment.eventId);
 
     if (event.createdBy !== req.cookies.auth) {
         res.status(403).json({
-            message: "Пользователь не является создателем события!"
+            message: 'Пользователь не является создателем события!'
         });
 
         return;
@@ -46,7 +46,7 @@ router.post("/:id/complete", async (req, res) => {
     res.status(200).send(enrollment._id);
 });
 
-router.post('/:id/certificate', async (req, res) => {
+router.post('/enrollment/:id/certificate', async (req, res) => {
     const html = 'Participant: <b>${participant.email}</b>';
 
     const enrollmentId = req.params.id;

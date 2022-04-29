@@ -8,7 +8,10 @@ const eventSchema = new Schema({
         required: true
     },
     description: String,
-    logo: String, //base64
+    logo: {
+        data: Buffer,
+        contentType: String
+    }, //base64
     attachments: [{
         base64: {type: String, required: true},
         date: {type: Date, default: Date.now}
