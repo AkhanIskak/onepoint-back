@@ -1,10 +1,11 @@
 import express from "express";
-import User from '../models/user.mjs'
+import UserModel from '../models/user.mjs';
+
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
     try {
-        await User.create(req.body);
+        await UserModel.create(req.body);
         res.status(200).json({ 
             message: "User successfuly created"
         })
@@ -17,7 +18,7 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-    const user = await User.findOne(req.body);
+    const user = await UserModel.findOne(req.body);
     if (user) {
         //jwt token
         res.cookie("auth", req.body.email).status(200).json({message: "successfuy logged in"})
