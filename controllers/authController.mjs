@@ -5,10 +5,8 @@ const router = express.Router();
 
 router.post('/auth/register', async (req, res) => {
     try {
-        await UserModel.create(req.body);
-        res.status(200).send({
-            message: 'User successfully created'
-        })
+        const user = await UserModel.create(req.body);
+        res.status(200).send(user);
     } catch (err) {
         console.log(err);
         res.status(500).json({

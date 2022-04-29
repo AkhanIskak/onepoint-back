@@ -53,9 +53,6 @@ router.post('/enrollment/:id/complete', async (req, res) => {
 });
 
 router.post('/enrollment/:id/certificate', async (req, res) => {
-    //TODO: html template
-    const html = 'Participant: <b>${participant.email}</b>';
-
     const enrollmentId = req.params.id;
 
     if (!enrollmentId) {
@@ -74,33 +71,39 @@ router.post('/enrollment/:id/certificate', async (req, res) => {
         return;
     }
 
-    const user = await UserModel.findById(enrollment.participantId);
-    const event = await EventModel.findById(enrollment.eventId);
+    const [user, event] = await Promise.all([UserModel.findById(enrollment.participantId), EventModel.findById(enrollment.eventId)]);
 
-    enrollment.participant = user;
-    enrollment.event = event;
+    const enrollmentObject = enrollment.toObject();
+    const userObject = user.toObject();
+    const eventObject = event.toObject();
 
-    const processedHtml = processString(html, enrollment);
+    enrollmentObject.participant = userObject;
+    enrollmentObject.event = eventObject;
 
-    pdf.create(processedHtml).toBuffer(function (err, buffer) {
+    // const processedHtml = processString(html, enrollmentObject);
+
+    const html = `<html> <head> <style type=\'text/css\'> body, html{ margin: 0; padding: 0;}body{color: black; display: table; font-family: Georgia, serif; font-size: 24px; text-align: center;}.container{border: 20px solid tan; width: 750px; height: 563px; display: table-cell; vertical-align: middle;}.logo{color: tan;}.marquee{color: tan; font-size: 48px; margin: 20px;}.assignment{margin: 20px;}.person{border-bottom: 2px solid black; font-size: 32px; font-style: italic; margin: 20px auto; width: 400px;}.reason{margin: 20px;}</style> </head> <body> <div class="container"> <div class="logo"> Организатор: <b>${enrollmentObject.event.createdBy}</b> </div><div class="marquee"> Сертификат об участии </div><div class="assignment"> Данный сертификат присуждается человеку с именем </div><div class="person"> <b>${enrollmentObject.participant.name}</b> </div><div class="reason"> ${enrollmentObject.comment} </div></div></body></html>`;
+
+    pdf.create(html, {format: 'Letter', orientation: 'landscape'}).toBuffer(function (err, buffer) {
         if (err) {
             res.status(500).send({
                 message: 'Ошибка при создании сертификата!'
             });
         }
 
-        res.send(buffer);
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-disposition': 'attachment;filename=certificate.pdf',
+            'Content-Length': buffer.length
+        });
+        res.end(buffer);
     });
 });
 
 function processString(template, valueObject) {
-    return template.replace(
-        /{\w+}/g, //{value}
-        placeholderWithDelimiters => {
-            const placeholderWithoutDelimiters = placeholderWithDelimiters.substring(1, placeholderWithDelimiters.length - 1);
-
-            return path(valueObject, placeholderWithoutDelimiters);
-        },
+    return template.replaceAll(
+        /(?<=\[).+?(?=\])/, //{value}
+        placeholderWithoutDelimiters => path(valueObject, placeholderWithoutDelimiters)
     );
 }
 
