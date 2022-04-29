@@ -40,7 +40,9 @@ router.post('/enrollment/:id/complete', async (req, res) => {
 
     enrollment.isCompleted = true;
     enrollment.comment = req.body.comment;
-
+    const user = await UserModel.findById(enrollment.participantId)
+    user.reputation = user.reputation + 30;
+    user.save()
     enrollment.update();
 
     res.status(200).send(enrollment._id);

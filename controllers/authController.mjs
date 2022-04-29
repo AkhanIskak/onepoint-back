@@ -3,7 +3,7 @@ import UserModel from '../models/user.mjs';
 
 const router = express.Router();
 
-router.post('auth/register', async (req, res) => {
+router.post('/auth/register', async (req, res) => {
     try {
         await UserModel.create(req.body);
         res.status(200).send({
@@ -17,7 +17,7 @@ router.post('auth/register', async (req, res) => {
     }
 });
 
-router.post('auth/login', async (req, res) => {
+router.post('/auth/login', async (req, res) => {
     const user = await UserModel.findOne(req.body);
     if (user) {
         //jwt token

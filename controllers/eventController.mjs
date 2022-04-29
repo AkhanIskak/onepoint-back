@@ -70,7 +70,7 @@ router.post('/event/', upload.single('logo'), async (req, res) => {
 });
 
 router.post('/event/enroll/:eventId', async (req, res) => {
-    const {_id} = await UserModel.findOne({email: req.cookies.email});
+    const {_id} = await UserModel.findOne({email: req.cookies.auth});
 
     const enrollment = await EnrollmentModel.create({
         participantId: _id,
