@@ -18,8 +18,7 @@ router.post('/auth/register', async (req, res) => {
 });
 
 router.post('/auth/login', async (req, res) => {
-    const user = await UserModel.findOne(req.body);
-    if (user) {
+    if (UserModel.exists(req.body)) {
         //jwt token
         res.writeHead(200, {
             'Set-Cookie': `auth=${req.body.email}`,
