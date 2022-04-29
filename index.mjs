@@ -5,7 +5,7 @@ import authController from "./controllers/authController.mjs";
 import mongoose from "mongoose";
 import cookieParser from 'cookie-parser';
 import eventController from "./controllers/eventController.mjs";
- import enrollmentController from "./controllers/enrollmentController.mjs";
+import enrollmentController from "./controllers/enrollmentController.mjs";
 
 const app = express();
 

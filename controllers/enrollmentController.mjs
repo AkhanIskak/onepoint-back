@@ -25,17 +25,6 @@ router.get("/", async (req, res) => {
     res.status(200).send(enrollments);
 });
 
-router.post("/:eventId", async (req, res) => {
-    const {_id} = await UserModel.findOne({email: req.cookies.email});
-
-    const enrollment = await EnrollmentModel.create({
-        participantId: _id,
-        eventId: req.params.eventId,
-    });
-
-    res.status(200).send(enrollment._id);
-});
-
 router.post("/:id/complete", async (req, res) => {
     //check if current user is actually creator of event;
     const enrollment = await EventModel.findById(req.params.id);
@@ -111,3 +100,5 @@ function path(obj, path) {
         }
     }
 }
+
+export default router;
