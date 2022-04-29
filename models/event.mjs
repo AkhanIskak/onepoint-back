@@ -6,7 +6,7 @@ const eventSchema = new Schema({
     name: String,
     attachments: [{base64: String, date: {type: Date, default: Date.now}}],
     createTs: {type: Date, default: Date.now},
-    comments: [{body: String, date: Date}],
+    comments: [{creator: String, body: String, date: Date}],
     createdBy: String,
     rating: Number,
     location:String

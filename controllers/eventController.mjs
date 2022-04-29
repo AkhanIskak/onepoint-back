@@ -6,42 +6,42 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     const userEmail = req.query?.userEmail;
 
-    let conspects;
+    let events;
     if (userEmail) {
-        conspects = await EventModel.find({'createdBy': userEmail});
+        events = await EventModel.find({'createdBy': userEmail});
     } else {
-        conspects = await EventModel.find({});
+        events = await EventModel.find({});
     }
 
-    res.status(200).send(conspects);
+    res.status(200).send(events);
 });
 
 router.get('/:id', async (req, res) => {
     const id = req.params.id;
 
-    const conspect = await EventModel.findById(id);
+    const event = await EventModel.findById(id);
 
-    res.status(200).send(conspect);
+    res.status(200).send(event);
 });
 
 router.put('/:id', async (req, res) => {
     const id = req.params.id;
-    const conspect = req.body;
+    const event = req.body;
 
-    await EventModel.findByIdAndUpdate(id, conspect);
+    await EventModel.findByIdAndUpdate(id, event);
     await EventModel.save();
 
-    res.status(200).send(conspect._id.toString());
+    res.status(200).send(event._id.toString());
 });
 
 router.post('/', async (req, res) => {
     const body = req.body;
 
-    const conspect = new EventModel(body);
+    const event = new EventModel(body);
 
-    const savedConspect = await conspect.save();
+    const savedEvent = await event.save();
 
-    return savedConspect._id.toString();
+    return savedEvent._id.toString();
 });
 
 
