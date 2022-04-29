@@ -4,14 +4,17 @@ const {Schema} = mongoose;
 
 const eventSchema = new Schema({
     name: String,
-    attachments: [{base64: String, date: {type: Date, default: Date.now}}],
-    createTs: {type: Date, default: Date.now},
-    comments: [{body: String, date: Date}],
-    createdBy: String,
-    rating: Number,
-    location:String
+    creator:String,//email of creator,
+    description:String,
+    date:String,
+    place:String,
+    comments:String,
+    viewCount:Number,
+    priority:Number
+},{
+    timestamps: { createdAt: true, updatedAt: false }
 });
 
-const EventModel = mongoose.model('Conspect', eventSchema);
+const EventModel = mongoose.model('Events', eventSchema);
 
 export default EventModel;

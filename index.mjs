@@ -1,9 +1,10 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import config from './config.mjs';
-import authController  from "./controllers/authController.mjs";
+import authController from "./controllers/authController.mjs";
 import mongoose from "mongoose";
 import cookieParser from 'cookie-parser';
+import eventController from "./controllers/eventController.mjs";
 
 const app = express();
 
@@ -27,11 +28,9 @@ app.use((req, res, next) => {
 
 //controllers
 app.use('/auth', authController);
-
+app.use('/events', eventController)
 app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-
-    res.render('error', {
+    res.status(err.status || 500).json({
         message: err.message,
         error: err
     });

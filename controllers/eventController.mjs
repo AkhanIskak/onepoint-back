@@ -2,36 +2,33 @@ import express from 'express';
 import EventModel from "../models/event.mjs";
 
 const router = express.Router();
-
-router.get('/', async (req, res) => {
-    const userEmail = req.query?.userEmail;
-
-    let conspects;
-    if (userEmail) {
-        conspects = await EventModel.find({'createdBy': userEmail});
-    } else {
-        conspects = await EventModel.find({});
+router.use(async (req, res, next) => {
+    const user = await EventModel.find({email: req.cookies.auth})
+    if (!user) {
+        res.status(500).json({message: "User is not logged in , please relogin"})
+        return;
     }
+    next();
+});
+router.get('/', async (req, res) => {
 
-    res.status(200).send(conspects);
+    const events = await EventModel.find().limit(req.query.limit).skip(req.query.offset);
+    res.status(200).json(events);
 });
 
 router.get('/:id', async (req, res) => {
     const id = req.params.id;
-
-    const conspect = await EventModel.findById(id);
-
-    res.status(200).send(conspect);
+    const event = await EventModel.findById(id);
+    res.status(200).send(event);
 });
 
 router.put('/:id', async (req, res) => {
     const id = req.params.id;
-    const conspect = req.body;
+    const event = req.body;
 
-    await EventModel.findByIdAndUpdate(id, conspect);
-    await EventModel.save();
+    await EventModel.findByIdAndUpdate(id, event);
 
-    res.status(200).send(conspect._id.toString());
+    res.status(200).json(event._id.toString());
 });
 
 router.post('/', async (req, res) => {
@@ -40,8 +37,10 @@ router.post('/', async (req, res) => {
     const conspect = new EventModel(body);
 
     const savedConspect = await conspect.save();
+    res.status(200).json({
+        id: savedConspect._id.toString()
+    })
 
-    return savedConspect._id.toString();
 });
 
 
