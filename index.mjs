@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import config from './config.mjs';
-
+import UserAuth from '/controllers/auth.mjs';
 const app = express();
 
 app.use(bodyParser.json());
@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 });
 
 //controllers
-
+app.use('/user',UserAuth);
 app.listen(config.port, () => {
     console.log(`App listening on port ${config.port}`);
 });
