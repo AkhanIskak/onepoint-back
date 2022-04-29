@@ -11,6 +11,6 @@ const conspectSchema = new Schema({
     rating: Number
 });
 
-const Conspect = mongoose.model('Conspect', conspectSchema);
+const ConspectModel = mongoose.model('Conspect', conspectSchema);
 
-export default Conspect;
+export default ConspectModel;
