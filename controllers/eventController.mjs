@@ -26,19 +26,19 @@ router.put('/:id', async (req, res) => {
     const id = req.params.id;
     const event = req.body;
 
-    await EventModel.findByIdAndUpdate(id, event);
+    const updatedEvent = await EventModel.findByIdAndUpdate(id, event);
 
-    res.status(200).json(event._id.toString());
+    res.status(200).json(updatedEvent);
 });
 
 router.post('/', async (req, res) => {
     const body = req.body;
 
-    const conspect = new EventModel(body);
+    const event = new EventModel(body);
 
-    const savedConspect = await conspect.save();
+    const savedEvent = await event.save();
     res.status(200).json({
-        id: savedConspect._id.toString()
+        id: savedEvent._id.toString()
     })
 
 });
