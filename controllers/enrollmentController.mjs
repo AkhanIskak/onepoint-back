@@ -59,13 +59,21 @@ router.post('/enrollment/:id/certificate', async (req, res) => {
         });
     }
 
-    const enrollment = await EventModel.findOne({_id: enrollmentId});
+    const enrollment = await EnrollmentModel.findOne({_id: enrollmentId});
 
-    const enrollmentUser = await UserModel.findById(enrollment.participantId);
-    const enrollmentEvent = await EventModel.findById(enrollment.eventId);
+    if (!enrollment.isCompleted) {
+        res.status(500).send({
+            message: 'Вы не посещали событие!'
+        });
 
-    enrollment.participant = enrollmentUser;
-    enrollment.event = enrollmentEvent;
+        return;
+    }
+
+    const user = await UserModel.findById(enrollment.participantId);
+    const event = await EventModel.findById(enrollment.eventId);
+
+    enrollment.participant = user;
+    enrollment.event = event;
 
     const processedHtml = processString(html, enrollment);
 
