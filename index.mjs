@@ -1,7 +1,7 @@
-import bodyParser from 'body-parser';
+ import bodyParser from 'body-parser';
 import express from 'express';
 import config from './config.mjs';
-import UserAuth from '/controllers/auth.mjs';
+import UserAuth from '/controllers/authController.mjs';
 const app = express();
 
 app.use(bodyParser.json());
