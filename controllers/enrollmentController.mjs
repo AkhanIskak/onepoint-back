@@ -7,7 +7,7 @@ import pdf from 'html-pdf';
 const router = express.Router();
 
 router.use(async (req, res, next) => {
-    const user = await EventModel.find({email: req.cookies.auth})
+    const user = await UserModel.find({email: req.header('Auth')})
 
     if (!user) {
         res.status(401).send();
@@ -18,7 +18,7 @@ router.use(async (req, res, next) => {
 });
 
 router.get('/enrollment', async (req, res) => {
-    const {_id} = await UserModel.findOne({email: req.cookies.auth});
+    const {_id} = await UserModel.findOne({email: req.header('Auth')});
 
     const enrollments = await EnrollmentModel.find({participantId: _id})
 
@@ -30,7 +30,7 @@ router.post('/enrollment/:id/complete', async (req, res) => {
     const enrollment = await EnrollmentModel.findById(req.params.id);
     const event = await EventModel.findById(enrollment.eventId);
 
-    if (event.createdBy !== req.cookies.auth) {
+    if (event.createdBy !== req.header('Auth')) {
         res.status(403).json({
             message: 'Пользователь не является создателем события!'
         });

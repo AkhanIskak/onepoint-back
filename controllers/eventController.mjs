@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 router.use(async (req, res, next) => {
-    const user = await EventModel.find({email: req.cookies.auth})
+    const user = await EventModel.find({email: req.header('Auth')})
 
     if (!user) {
         res.status(401).send();
@@ -70,7 +70,7 @@ router.post('/event/', upload.single('logo'), async (req, res) => {
 });
 
 router.post('/event/enroll/:id', async (req, res) => {
-    const {_id} = await UserModel.findOne({email: req.cookies.auth});
+    const {_id} = await UserModel.findOne({email: req.header('Auth')});
 
     const enrollment = await EnrollmentModel.create({
         participantId: _id,

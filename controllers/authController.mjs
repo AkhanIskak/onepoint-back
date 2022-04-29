@@ -19,11 +19,7 @@ router.post('/auth/register', async (req, res) => {
 
 router.post('/auth/login', async (req, res) => {
     if (UserModel.exists(req.body)) {
-        //jwt token
-        res.writeHead(200, {
-            'Set-Cookie': `auth=${req.body.email}`,
-        }).end();
-
+        res.status(200).send(req.body.email);
     } else {
         res.sendStatus(401);
     }
