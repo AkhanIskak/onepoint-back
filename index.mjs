@@ -7,11 +7,14 @@ import cookieParser from 'cookie-parser';
 import eventController from "./controllers/eventController.mjs";
 import enrollmentController from "./controllers/enrollmentController.mjs";
 import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 import { readFile } from 'fs/promises';
 
 const swaggerDocument = JSON.parse((await readFile('./swagger.json')).toString());
 
 const app = express();
+
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
