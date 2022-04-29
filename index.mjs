@@ -5,6 +5,7 @@ import authController from "./controllers/authController.mjs";
 import mongoose from "mongoose";
 import cookieParser from 'cookie-parser';
 import eventController from "./controllers/eventController.mjs";
+ import enrollmentController from "./controllers/enrollmentController.mjs";
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 //controllers
 app.use('/auth', authController);
 app.use('/events', eventController)
+app.use('/enrollments', enrollmentController)
 app.use(function (err, req, res, next) {
     res.status(err.status || 500).json({
         message: err.message,
