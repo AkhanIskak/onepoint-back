@@ -20,7 +20,8 @@ router.use(async (req, res, next) => {
 router.get('/enrollment', async (req, res) => {
     const {_id} = await UserModel.findOne({email: req.header('Auth')});
 
-    const enrollments = await EnrollmentModel.find({participantId: _id})
+    const activeOnly = req.query.completed;
+    const enrollments = await EnrollmentModel.find({participantId: _id, isCompleted: !!activeOnly})
 
     res.status(200).send(enrollments);
 });
