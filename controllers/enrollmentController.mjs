@@ -68,9 +68,24 @@ router.use(async (req, res, next) => {
 router.get('/enrollment', async (req, res) => {
     const {_id} = await UserModel.findOne({email: req.header('Auth')});
 
-    const enrollments = await EnrollmentModel.find({participantId: _id})
+    const enrollments = await EnrollmentModel.find({participantId: _id});
 
-    res.status(200).send(enrollments);
+    const objectEnrollments = await Promise.all(enrollments.map(async enrollment => {
+        const participant = await UserModel.findById(enrollment.participantId);
+        const event = await EventModel.findById(enrollment.eventId);
+
+        const enrollmentObject = enrollment.toObject();
+        if (participant) {
+            enrollmentObject.participant = participant.toObject();
+        }
+        if (event) {
+            enrollmentObject.event = event.toObject();
+        }
+
+        return enrollmentObject;
+    }));
+
+    res.status(200).send(objectEnrollments);
 });
 
 router.post('/enrollment/:id/complete', async (req, res) => {
