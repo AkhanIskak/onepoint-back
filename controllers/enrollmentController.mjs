@@ -6,53 +6,6 @@ import pdf from 'html-pdf';
 
 const router = express.Router();
 
-router.use(async (req, res, next) => {
-    const authToken = req.header('Auth');
-
-    if (!authToken || !(await UserModel.exists({email: authToken}))) {
-        res.status(401).send();
-        return;
-    }
-
-    next();
-});
-
-router.get('/enrollment', async (req, res) => {
-    const {_id} = await UserModel.findOne({email: req.header('Auth')});
-
-    const activeOnly = req.query.completed;
-    const enrollments = await EnrollmentModel.find({participantId: _id, isCompleted: !!activeOnly})
-
-    res.status(200).send(enrollments);
-});
-
-router.post('/enrollment/:id/complete', async (req, res) => {
-    //check if current user is actually creator of event;
-    const enrollment = await EnrollmentModel.findById(req.params.id);
-    const event = await EventModel.findById(enrollment.eventId);
-
-    if (event.createdBy !== req.header('Auth')) {
-        res.status(403).json({
-            message: 'Пользователь не является создателем события!'
-        });
-
-        return;
-    }
-
-    enrollment.isCompleted = true;
-    enrollment.comment = req.body.comment;
-
-    const user = await UserModel.findById(enrollment.participantId)
-
-    //TODO: reputation history
-    user.reputation = user.reputation + 30;
-    user.save()
-
-    enrollment.update();
-
-    res.status(200).send(enrollment._id);
-});
-
 router.get('/enrollment/:id/certificate', async (req, res) => {
     const enrollmentId = req.params.id;
 
@@ -99,6 +52,53 @@ router.get('/enrollment/:id/certificate', async (req, res) => {
         });
         res.end(buffer);
     });
+});
+
+router.use(async (req, res, next) => {
+    const authToken = req.header('Auth');
+
+    if (!authToken || !(await UserModel.exists({email: authToken}))) {
+        res.status(401).send();
+        return;
+    }
+
+    next();
+});
+
+router.get('/enrollment', async (req, res) => {
+    const {_id} = await UserModel.findOne({email: req.header('Auth')});
+
+    const activeOnly = req.query.completed;
+    const enrollments = await EnrollmentModel.find({participantId: _id, isCompleted: !!activeOnly})
+
+    res.status(200).send(enrollments);
+});
+
+router.post('/enrollment/:id/complete', async (req, res) => {
+    //check if current user is actually creator of event;
+    const enrollment = await EnrollmentModel.findById(req.params.id);
+    const event = await EventModel.findById(enrollment.eventId);
+
+    if (event.createdBy !== req.header('Auth')) {
+        res.status(403).json({
+            message: 'Пользователь не является создателем события!'
+        });
+
+        return;
+    }
+
+    enrollment.isCompleted = true;
+    enrollment.comment = req.body.comment;
+
+    const user = await UserModel.findById(enrollment.participantId)
+
+    //TODO: reputation history
+    user.reputation = user.reputation + 30;
+    user.save()
+
+    enrollment.update();
+
+    res.status(200).send(enrollment._id);
 });
 
 function processString(template, valueObject) {
