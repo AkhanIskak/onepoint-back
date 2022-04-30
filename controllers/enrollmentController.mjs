@@ -53,7 +53,7 @@ router.post('/enrollment/:id/complete', async (req, res) => {
     res.status(200).send(enrollment._id);
 });
 
-router.post('/enrollment/:id/certificate', async (req, res) => {
+router.get('/enrollment/:id/certificate', async (req, res) => {
     const enrollmentId = req.params.id;
 
     if (!enrollmentId) {
